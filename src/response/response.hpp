@@ -8,7 +8,7 @@ namespace express {
 	class response {
 
     public:
-		response(HttpServer::Response &resp);
+		response(HttpServer::Response &res);
 
         //set content type to HTML
         void send(htmlContent html);
@@ -19,7 +19,7 @@ namespace express {
         void sendFile();
 
     private:
-        HttpServer::Response& res;
+        HttpServer::Response& _res;
 	};
 
 }

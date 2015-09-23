@@ -8,12 +8,20 @@
 #include <vector>
 
 
+
 typedef SimpleWeb::Server<SimpleWeb::HTTP> HttpServer;
 
 namespace express {
 
+
     typedef std::string routePath;
     typedef std::string htmlContent;
+    typedef std::string regx_param;
+    typedef std::vector<std::string> regx_params;
+    typedef std::map<regx_param,std::string> paramMap;
+
+    const std::string regxParam(":([a-zA-Z\\d]+)");
+    const std::string regxURI("([a-zA-Z\\\\d]+)");
 
     enum class http_verb {
         del,

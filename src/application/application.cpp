@@ -1,8 +1,7 @@
 #include <application/application.hpp>
+#include <boost/regex.hpp>
 
 using namespace express;
-
-#include <boost/regex.hpp>
 
 application::application() {
 
@@ -15,21 +14,24 @@ void application::get(const routePath route,const routeHandler rHandler) {
     _handler.func = rHandler;
 
     //extracting route parameters
-    boost::regex params_regex(":([a-zA-Z\\d]+)");
+    boost::regex params_regex(regxParam);
     boost::sregex_iterator next(route.begin(), route.end(), params_regex);
     boost::sregex_iterator end;
+    //first element is for complete path
+    _handler.params.push_back("path");
     while (next != end) {
         boost::smatch match = *next;
-        //std::cout << match.str(1) << std::endl;
         _handler.params.push_back(match.str(1));
         next++;
     }
 
+    //handling trailing edge
+
     //rewriting route as regular regex
-    std::string regex_route = boost::regex_replace(route,params_regex,"([a-zA-Z\\\\d]+)");
+    std::string regex_route = boost::regex_replace(route,params_regex,regxURI);
 
     _actions.insert(std::make_pair(http_verb::get,_handler));
-    routing.insert(std::make_pair(regex_route,_actions));
+    _routing.insert(std::make_pair(regex_route,_actions));
 
 
 }
@@ -39,34 +41,20 @@ void application::listen(int port) {
     HttpServer server(port,4);
 
     server.default_resource["GET"]=[&](HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
-
-        express::response response(res);
-        express::request request(req);
-        connect_route(req->path,http_verb::get,request,response);
+        connect_route(http_verb::get,res,req);
     };
 
     server.default_resource["POST"]=[&](HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
-
-        express::response response(res);
-        express::request request(req);
-        connect_route(req->path,http_verb::post,request,response);
+        connect_route(http_verb::post,res,req);
     };
 
     server.default_resource["PUT"]=[&](HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
-
-        express::response response(res);
-        express::request request(req);
-        connect_route(req->path,http_verb::put,request,response);
+        connect_route(http_verb::put,res,req);
     };
 
     server.default_resource["DELETE"]=[&](HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
-
-        express::response response(res);
-        express::request request(req);
-        connect_route(req->path,http_verb::del,request,response);
+        connect_route(http_verb::del,res,req);
     };
-
-
 
     std::thread server_thread([&server](){
         server.start();
@@ -75,18 +63,36 @@ void application::listen(int port) {
     server_thread.join();
 }
 
-void application::connect_route(const routePath route,const http_verb verb, express::request req, express::response res) {
+void application::connect_route(const http_verb verb, HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
 
-    std::for_each(routing.begin(),routing.end(),
+    express::response _res(res);
+    paramMap pMap;
+
+    std::for_each(_routing.begin(),_routing.end(),
                   [&](dispatcherMap::value_type &rt){
-                      auto _route = rt.first;
-                        if((routing[_route].find(verb) != routing[_route].end())
-                            && boost::regex_match(req.route(),boost::regex(_route)))
+                      auto route = rt.first;
+                        if((_routing[route].find(verb) != _routing[route].end())
+                            && boost::regex_match(req->path,boost::regex(route)))
                         {
-                            routing[_route][verb].func(req,res);
+                            extract_parameters(req->path, route,_routing[route][verb].params,pMap);
+                            express::request _req(req,pMap);
+                            _routing[route][verb].func(_req,_res);
                             return;
                         }
     });
 
-    res.sendStatus(http_status::http_not_found);
+    _res.sendStatus(http_status::http_not_found);
+}
+
+void application::extract_parameters(const routePath clientPath,const routePath serverRegx,regx_params &regParamList,paramMap& pMap) {
+    boost::regex regx(serverRegx);
+    boost::smatch match;
+
+    boost::regex_search(clientPath, match, regx);
+    if (regParamList.size() == match.size()) {
+        for (size_t i = 0; i < match.size(); ++i) {
+            pMap.insert(std::make_pair(regParamList[i], match[i]));
+        }
+    }
+
 }

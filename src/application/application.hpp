@@ -8,13 +8,13 @@
 namespace express {
 
     typedef std::function<void(request,response)> routeHandler;
-    typedef std::vector<std::string> regx_params;
     struct handler {
         routeHandler func;
         regx_params params;
     };
     typedef std::map<http_verb,handler> actions;
     typedef std::map<routePath,actions> dispatcherMap;
+
 
     class application
     {
@@ -31,8 +31,10 @@ namespace express {
 
     private:
 
-        void connect_route(const routePath,const http_verb verb, express::request req, express::response res);
-        dispatcherMap routing;
+        void connect_route(const http_verb verb,HttpServer::Response& res,std::shared_ptr<HttpServer::Request> req);
+        void extract_parameters(const routePath clientPath,const routePath serverRegx,regx_params &regParamList,paramMap& pMap);
+
+        dispatcherMap _routing;
     };
 
 }
