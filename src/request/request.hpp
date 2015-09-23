@@ -6,12 +6,16 @@
 namespace express {
 
 	class request {
-  
-		public:
-			request();
-    
-		private:
+        typedef std::string routePath;
 
+    public:
+        request(std::shared_ptr<HttpServer::Request> req);
+
+        routePath route();
+
+    private:
+        std::shared_ptr<HttpServer::Request> requ;
+        routePath route_path;
 	};
 
 }

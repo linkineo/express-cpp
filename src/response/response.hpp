@@ -15,11 +15,11 @@ namespace express {
         //void send(JSON) -- array or JSON ?
         //void send (Buffer) -- octet stream
 
-        void sendStatus(int status);
+        void sendStatus(http_status status);
+        void sendFile();
 
     private:
-
-        HttpServer::Response * res;
+        HttpServer::Response& res;
 	};
 
 }

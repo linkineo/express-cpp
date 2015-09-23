@@ -9,7 +9,10 @@ int main(int argc, char ** argv)
       res.send("World !");
     });
 
-    app.listen(80);
+    app.get("/hello/:world",[](express::request,express::response res) {
+        res.send("World=");
+    });
+    app.listen(8080);
 
   return 0;
 }

@@ -4,6 +4,10 @@
 
 using namespace express;
 
-request::request() {
+request::request(std::shared_ptr<HttpServer::Request> req) : requ(req),route_path(req->path) {
 
+}
+
+routePath request::route() {
+    return route_path;
 }

@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <server_http.hpp>
+#include <vector>
 
 
 typedef SimpleWeb::Server<SimpleWeb::HTTP> HttpServer;
@@ -19,6 +20,20 @@ namespace express {
         get,
         put,
         post
+    };
+
+    enum class http_status {
+        http_ok = 200,
+        http_forbidden = 403,
+        http_not_found = 404,
+        http_internal_server_error = 500
+    };
+
+    static std::map<http_status,std::string> http_status_text = {
+            {http_status::http_ok, "OK"},
+            {http_status::http_forbidden, "FORBIDDEN"},
+            {http_status::http_not_found, "FILE NOT FOUND"},
+            {http_status::http_internal_server_error, "INTERNAL SERVER ERROR"}
     };
 
 }
