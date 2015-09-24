@@ -9,15 +9,15 @@ namespace express {
         typedef std::string routePath;
 
     public:
-        request(std::shared_ptr<HttpServer::Request>,const paramMap);
+        request(std::shared_ptr<HttpServer::Request>,paramMap parameters);
 
-        paramMap params();
-        routePath route();
+
+        property_readonly<paramMap> params;
+        const routePath route;
+        bodyContent& body;
 
     private:
         std::shared_ptr<HttpServer::Request> _req;
-        routePath _route_path;
-        paramMap _param_map;
 	};
 
 }

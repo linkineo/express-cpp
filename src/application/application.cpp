@@ -9,6 +9,26 @@ application::application() {
 
 void application::get(const routePath route,const routeHandler rHandler) {
 
+    register_route(http_verb::get,route,rHandler);
+}
+
+void application::post(const routePath route,const routeHandler rHandler) {
+
+    register_route(http_verb::post,route,rHandler);
+}
+
+void application::put(const routePath route,const routeHandler rHandler) {
+
+    register_route(http_verb::put,route,rHandler);
+}
+
+void application::del(const routePath route,const routeHandler rHandler) {
+
+    register_route(http_verb::del,route,rHandler);
+}
+
+void application::register_route(const http_verb verb,const routePath route,const routeHandler rHandler) {
+
     actions _actions;
     handler _handler;
     _handler.func = rHandler;
@@ -30,9 +50,8 @@ void application::get(const routePath route,const routeHandler rHandler) {
     //rewriting route as regular regex
     std::string regex_route = boost::regex_replace(route,params_regex,regxURI);
 
-    _actions.insert(std::make_pair(http_verb::get,_handler));
+    _actions.insert(std::make_pair(verb,_handler));
     _routing.insert(std::make_pair(regex_route,_actions));
-
 
 }
 
@@ -67,7 +86,6 @@ void application::connect_route(const http_verb verb, HttpServer::Response& res,
 
     express::response _res(res);
     paramMap pMap;
-
     std::for_each(_routing.begin(),_routing.end(),
                   [&](dispatcherMap::value_type &rt){
                       auto route = rt.first;

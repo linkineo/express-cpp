@@ -13,11 +13,15 @@ int main(int argc, char ** argv)
     });
 
     app.get("/hello/:world",[](express::request req,express::response res) {
-        res.send("World="+ req.params()["world"]);
+        res.send("World="+ req.params["world"]);
     });
 
     app.get("/hello/:id/age/:age",[](express::request req, express::response res) {
-        res.send("Hello " + req.params()["id"] + " ! You are " + req.params()["age"] + " years old !");
+        res.send("Hello " + req.params["id"] + " ! You are " + req.params["age"] + " years old !");
+    });
+
+    app.post("/dali/lamp",[](express::request req, express::response res) {
+        res.send("GOT IT POSTED ! - GOT:" + req.body.string());
     });
 
     app.listen(8080);

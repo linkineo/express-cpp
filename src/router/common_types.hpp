@@ -7,7 +7,9 @@
 #include <server_http.hpp>
 #include <vector>
 
-
+#include <iostream>
+#include <map>
+#include <type_traits>
 
 typedef SimpleWeb::Server<SimpleWeb::HTTP> HttpServer;
 
@@ -19,6 +21,7 @@ namespace express {
     typedef std::string regx_param;
     typedef std::vector<std::string> regx_params;
     typedef std::map<regx_param,std::string> paramMap;
+    typedef SimpleWeb::Server<SimpleWeb::HTTP>::Content bodyContent;
 
     const std::string regxParam(":([a-zA-Z\\d]+)");
     const std::string regxURI("([a-zA-Z\\\\d]+)");
@@ -45,6 +48,31 @@ namespace express {
     };
 
 }
+
+template <typename T > class property_readonly {
+    const T value;
+public:
+
+    property_readonly(const T& value) : value(value) {}
+
+    operator const T& () const {
+        return value;
+    }
+
+    const T& operator*() const {
+        return value;
+    }
+
+    const T* operator->() const {
+        return std::addressof(value);
+    }
+
+    const typename T::mapped_type  operator[] (typename T::key_type
+                                               key) const {
+        return value.at(key);
+    }
+};
+
 
 
 #endif //EXPRESS_CPP_COMMON_TYPES_HPP

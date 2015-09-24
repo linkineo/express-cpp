@@ -33,6 +33,7 @@ namespace express {
 
         void connect_route(const http_verb verb,HttpServer::Response& res,std::shared_ptr<HttpServer::Request> req);
         void extract_parameters(const routePath clientPath,const routePath serverRegx,regx_params &regParamList,paramMap& pMap);
+        void register_route(const http_verb verb,const routePath route,const routeHandler rHandler);
 
         dispatcherMap _routing;
     };
