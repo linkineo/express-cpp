@@ -1,6 +1,13 @@
 #include <response/response.hpp>
 
 #include <iostream>
+#include <iterator>
+#include <vector>
+#include <fstream>
+#include <boost/iostreams/stream.hpp>
+#include <boost/iostreams/stream_buffer.hpp>
+#include <boost/iostreams/device/file.hpp>
+
 
 using namespace express;
 
@@ -23,6 +30,16 @@ void response::sendStatus(http_status status) {
 
 }
 
-void response::sendFile() {
+void response::sendFile(const boost::filesystem::path file) {
+
+    std::ostringstream out;
+    std::ifstream fileS(file.string());
+    out << fileS.rdbuf();
+    std::string str(out.str());
+    const char * raw = str.c_str();
+
+    _res << "HTTP/1.1 200 OK\r\nContent-Length: " << str.length() << "\r\nContent-Type:" << content_types[file.extension().string()] << "\r\n\r\n";
+    _res.write(raw, str.length());
+    _res.flush();
 
 }

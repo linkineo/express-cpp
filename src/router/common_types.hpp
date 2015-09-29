@@ -10,6 +10,7 @@
 #include <iostream>
 #include <map>
 #include <type_traits>
+#include <boost/filesystem.hpp>
 
 typedef SimpleWeb::Server<SimpleWeb::HTTP> HttpServer;
 
@@ -43,11 +44,24 @@ namespace express {
     static std::map<http_status,std::string> http_status_text = {
             {http_status::http_ok, "OK"},
             {http_status::http_forbidden, "FORBIDDEN"},
-            {http_status::http_not_found, "FILE NOT FOUND"},
+            {http_status::http_not_found, "FILE NOT FOUND"},
             {http_status::http_internal_server_error, "INTERNAL SERVER ERROR"}
     };
 
-}
+    static std::map<std::string,std::string> content_types{
+            {".jpg","image/jpg"},
+            {".jpeg","image/jpeg"},
+            {".png","image/png"},
+            {".html","text/html"},
+            {".htm","text/html"},
+            {".json","text/json"},
+            {".xml","text/xml"},
+            {".txt","text/txt"},
+            {".css","text/css"},
+            {".js","application/javascript"}
+    };
+};
+
 
 template <typename T > class property_readonly {
     const T value;

@@ -27,6 +27,8 @@ namespace express {
         void post(const routePath route,const routeHandler rHandler);
         void put(const routePath route,const routeHandler rHandler);
 
+        void static_routes(const boost::filesystem::path);
+
         void listen(int port);
 
     private:

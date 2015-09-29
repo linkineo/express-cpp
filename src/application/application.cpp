@@ -82,6 +82,31 @@ void application::listen(int port) {
     server_thread.join();
 }
 
+void application::static_routes(const boost::filesystem::path rootPath)
+{
+    namespace fs = boost::filesystem;
+    if(!(fs::exists(rootPath) && fs::is_directory(rootPath)))
+        return;
+
+    std::string path(rootPath.string());
+
+    fs::recursive_directory_iterator end;
+    for(fs::recursive_directory_iterator fileList(rootPath) ; fileList != end; fileList++)
+    {
+        if(fs::is_regular_file(fileList->path()) && content_types.find(fileList->path().extension().string()) != content_types.end())
+        {
+            std::string full(fileList->path().string());
+            if(full.length() > path.length())
+            {
+                full = full.replace(0,path.length(),"");
+                fs::path p = fileList->path();
+                get(full,[p](express::request req, express::response res){
+                    res.sendFile(p); });
+            }
+        }
+    }
+}
+
 void application::connect_route(const http_verb verb, HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
 
     express::response _res(res);

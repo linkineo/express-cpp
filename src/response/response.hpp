@@ -16,7 +16,7 @@ namespace express {
         //void send (Buffer) -- octet stream
 
         void sendStatus(http_status status);
-        void sendFile();
+        void sendFile(const boost::filesystem::path file);
 
     private:
         HttpServer::Response& _res;
