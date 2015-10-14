@@ -10,6 +10,7 @@ namespace express {
     public:
 		response(HttpServer::Response &res);
 
+        void append(std::string header_name, std::string header_content);
         //set content type to HTML
         void send(htmlContent html);
         //void send(JSON) -- array or JSON ?
@@ -20,6 +21,7 @@ namespace express {
 
     private:
         HttpServer::Response& _res;
+        std::string _header_append;
 	};
 
 }

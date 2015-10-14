@@ -9,7 +9,8 @@ int main(int argc, char ** argv)
 	express::application app;
 
     app.get("/hello",[](express::request req, express::response res) {
-      res.send("World !");
+        res.append("X-Hello","World");
+        res.send("World !");
     });
 
     app.get("/hello/:world",[](express::request req,express::response res) {
