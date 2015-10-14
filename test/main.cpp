@@ -24,7 +24,7 @@ int main(int argc, char ** argv)
         res.send("GOT IT POSTED ! - GOT:" + req.body.string());
     });
 
-//    app.static_routes("/home/linkineo/Devl/express-cpp/build");
+    app.static_("/home/linkineo/Devl/express-cpp/build");
 
     app.listen(8010);
 

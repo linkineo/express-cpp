@@ -39,6 +39,7 @@ void application::register_route(const http_verb verb,const routePath route,cons
     boost::sregex_iterator end;
     //first element is for complete path
     _handler.params.push_back("path");
+
     while (next != end) {
         boost::smatch match = *next;
         _handler.params.push_back(match.str(1));
@@ -82,35 +83,21 @@ void application::listen(int port) {
     server_thread.join();
 }
 
-void application::static_routes(const boost::filesystem::path rootPath)
+void application::static_(const boost::filesystem::path rootPath)
 {
     namespace fs = boost::filesystem;
     if(!(fs::exists(rootPath) && fs::is_directory(rootPath)))
         return;
 
-    std::string path(rootPath.string());
-
-    fs::recursive_directory_iterator end;
-    for(fs::recursive_directory_iterator fileList(rootPath) ; fileList != end; fileList++)
-    {
-        if(fs::is_regular_file(fileList->path()) && content_types.find(fileList->path().extension().string()) != content_types.end())
-        {
-            std::string full(fileList->path().string());
-            if(full.length() > path.length())
-            {
-                full = full.replace(0,path.length(),"");
-                fs::path p = fileList->path();
-                get(full,[p](express::request req, express::response res){
-                    res.sendFile(p); });
-            }
-        }
-    }
+    _static_routes.push_back(rootPath);
 }
 
 void application::connect_route(const http_verb verb, HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
 
     express::response _res(res);
     paramMap pMap;
+
+    //matching for regular routes
     std::for_each(_routing.begin(),_routing.end(),
                   [&](dispatcherMap::value_type &rt){
                       auto route = rt.first;
@@ -124,7 +111,24 @@ void application::connect_route(const http_verb verb, HttpServer::Response& res,
                         }
     });
 
+
+    if(!match_file(_res,req->path))
     _res.sendStatus(http_status::http_not_found);
+}
+
+bool application::match_file(express::response &_res,std::string path)
+{
+    //matching for files
+    std::for_each(_static_routes.begin(),_static_routes.end(),[&](boost::filesystem::path p){
+        boost::filesystem::path file(p.string()+path);
+        if(boost::filesystem::exists(file))
+        {
+            _res.sendFile(file);
+            return true;
+        }
+    });
+
+    return false;
 }
 
 void application::extract_parameters(const routePath clientPath,const routePath serverRegx,regx_params &regParamList,paramMap& pMap) {
