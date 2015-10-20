@@ -14,7 +14,7 @@ int main(int argc, char ** argv)
     });
 
     app.get("/hello/:world",[](express::request req,express::response res) {
-        res.send("World="+ req.params["world"]);
+        res.send("World="+ req.params["world"] + "-- query [param1]=" + req.query["param1"] + " [param2]=" + req.query["param2"]);
     });
 
     app.get("/hello/:id/age/:age",[](express::request req, express::response res) {

@@ -97,15 +97,23 @@ void application::connect_route(const http_verb verb, HttpServer::Response& res,
     express::response _res(res);
     paramMap pMap;
 
+    std::string in_path(req->path);
+    queryMap query;
+
+    //match for queries
+    if(verb == http_verb::get) {
+        extract_query(in_path, query);
+    }
+
     //matching for regular routes
     std::for_each(_routing.begin(),_routing.end(),
                   [&](dispatcherMap::value_type &rt){
                       auto route = rt.first;
                         if((_routing[route].find(verb) != _routing[route].end())
-                            && boost::regex_match(req->path,boost::regex(route)))
+                            && boost::regex_match(in_path,boost::regex(route)))
                         {
-                            extract_parameters(req->path, route,_routing[route][verb].params,pMap);
-                            express::request _req(req,pMap);
+                            extract_parameters(in_path, route,_routing[route][verb].params,pMap);
+                            express::request _req(req,pMap,query);
                             _routing[route][verb].func(_req,_res);
                             return;
                         }
@@ -114,6 +122,24 @@ void application::connect_route(const http_verb verb, HttpServer::Response& res,
 
     if(!match_file(_res,req->path))
     _res.sendStatus(http_status::http_not_found);
+}
+
+bool application::extract_query(routePath &clientPath,queryMap &query)
+{
+    //extracting route parameters
+    boost::regex params_regex(regxQuery);
+    boost::regex query_remove(regxQueryRemove);
+    boost::sregex_iterator next(clientPath.begin(), clientPath.end(), params_regex);
+    boost::sregex_iterator end;
+
+    while (next != end) {
+        boost::smatch match = *next;
+        query.insert(std::make_pair(match.str(2),match.str(3)));
+        next++;
+    }
+
+    clientPath = boost::regex_replace(clientPath,query_remove,"");
+
 }
 
 bool application::match_file(express::response &_res,std::string path)

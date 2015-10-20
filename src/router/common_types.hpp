@@ -22,11 +22,13 @@ namespace express {
     typedef std::string regx_param;
     typedef std::vector<std::string> regx_params;
     typedef std::map<regx_param,std::string> paramMap;
+    typedef std::map<std::string,std::string> queryMap;
     typedef SimpleWeb::Server<SimpleWeb::HTTP>::Content bodyContent;
 
     const std::string regxParam(":([a-zA-Z\\d]+)");
     const std::string regxURI("([a-zA-Z\\\\d]+)");
-
+    const std::string regxQuery("(\\?|\\&)([^=]+)\\=([^&]+)");
+    const std::string regxQueryRemove("(\\?[^.]*)");
     enum class http_verb {
         del,
         get,

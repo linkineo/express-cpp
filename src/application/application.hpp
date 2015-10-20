@@ -36,8 +36,10 @@ namespace express {
 
         void connect_route(const http_verb verb,HttpServer::Response& res,std::shared_ptr<HttpServer::Request> req);
         void extract_parameters(const routePath clientPath,const routePath serverRegx,regx_params &regParamList,paramMap& pMap);
+        bool extract_query(routePath &clientPath,queryMap &query);
         void register_route(const http_verb verb,const routePath route,const routeHandler rHandler);
         bool match_file(express::response &_res,std::string path);
+
 
         dispatcherMap _routing;
         static_routes _static_routes;

@@ -4,7 +4,7 @@
 
 using namespace express;
 
-request::request(std::shared_ptr<HttpServer::Request> req,paramMap parameters) :
-        _req(req),params(parameters),route(req->path),body(req->content) {
+request::request(std::shared_ptr<HttpServer::Request> req,paramMap parameters, queryMap queries) :
+        _req(req),params(parameters),query(queries),route(req->path),body(req->content) {
 }
 
