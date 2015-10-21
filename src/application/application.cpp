@@ -113,7 +113,8 @@ void application::connect_route(const http_verb verb, HttpServer::Response& res,
                             && boost::regex_match(in_path,boost::regex(route)))
                         {
                             extract_parameters(in_path, route,_routing[route][verb].params,pMap);
-                            express::request _req(req,pMap,query);
+                            express::request::header_map h(req->header.begin(),req->header.end());
+                            express::request _req(req,pMap,query,h);
                             _routing[route][verb].func(_req,_res);
                             return;
                         }

@@ -3,6 +3,7 @@
 
 #include <request/request.hpp>
 #include <response/response.hpp>
+#include <request/request.hpp>
 #include <router/common_types.hpp>
 
 namespace express {
