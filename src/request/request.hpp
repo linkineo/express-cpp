@@ -14,6 +14,8 @@ namespace express {
 
         request(std::shared_ptr<HttpServer::Request>,paramMap parameters, queryMap queries, header_map &h);
 
+        bool is(std::string type);
+
 
         property_readonly<paramMap> params;
         queryMap query;
