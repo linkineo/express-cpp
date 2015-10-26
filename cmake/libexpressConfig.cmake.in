@@ -1,0 +1,8 @@
+set(libexpress_VERSION "0.1.0")
+
+@PACKAGE_INIT@
+
+set_and_check(libexpress_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set_and_check(libexpress_LIB_DIR "@PACKAGE_LIB_INSTALL_DIR@")
+set_and_check(libexpress_LIBRARIES "@PACKAGE_LIB_INSTALL_DIR@/@LIB_OUTPUT_NAME@")
+check_required_components(dali-modem)
