@@ -12,7 +12,7 @@ set (VERSION_STRING_INSTALL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
 
 add_definitions(--std=c++11)
 
-find_package(Boost 1.58 REQUIRED COMPONENTS system thread coroutine context filesystem regex)
+find_package(Boost 1.55 REQUIRED COMPONENTS system thread coroutine context filesystem regex)
 find_package(Threads REQUIRED)
 
 set(EXPRESS_HDR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -53,7 +53,7 @@ INSTALL_DESTINATION ${LIB_INSTALL_DIR}/libexpress/cmake
 PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR LIB_OUTPUT_NAME)
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/libexpressConfigVersion.cmake
 VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
-COMPATIBILITY SameMajorVersion )
+COMPATIBILITY AnyNewerVersion)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libexpressConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/libexpressConfigVersion.cmake
 DESTINATION ${LIB_INSTALL_DIR}/cmake/libexpress-${VERSION_STRING_INSTALL})
