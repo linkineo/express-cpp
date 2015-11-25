@@ -25,8 +25,8 @@ namespace express {
     typedef std::map<std::string,std::string> queryMap;
     typedef SimpleWeb::Server<SimpleWeb::HTTP>::Content bodyContent;
 
-    const std::string regxParam(":([a-zA-Z\\d]+)");
-    const std::string regxURI("([a-zA-Z\\\\d]+)");
+    const std::string regxParam(":([-[:word:]]+)");
+    const std::string regxURI("([-[:word:]]+)");
     const std::string regxQuery("(\\?|\\&)([^=]+)\\=([^&]+)");
     const std::string regxQueryRemove("(\\?[^.]*)");
     enum class http_verb {

@@ -22,8 +22,8 @@ int main(int argc, char ** argv)
         res.send("World="+ req.params["world"] + "-- query [param1]=" + req.query["param1"] + " [param2]=" + req.query["param2"]);
     });
 
-    app.get("/hello/:id/age/:age",[](express::request req, express::response res) {
-        res.send("Hello " + req.params["id"] + " ! You are " + req.params["age"] + " years old !");
+    app.get("/hello/:id_var/age/:age",[](express::request req, express::response res) {
+        res.send("Hello " + req.params["id_var"] + " ! You are " + req.params["age"] + " years old !");
     });
 
     app.post("/dali/lamp",[](express::request req, express::response res) {
