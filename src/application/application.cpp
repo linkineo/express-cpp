@@ -92,6 +92,10 @@ void application::static_(const boost::filesystem::path rootPath)
     _static_routes.push_back(rootPath);
 }
 
+void application::default_(const default_file def) {
+        _default_file = def;
+}
+
 void application::connect_route(const http_verb verb, HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
 
     express::response _res(res);
@@ -147,11 +151,20 @@ bool application::match_file(express::response &_res,std::string path)
 {
     //matching for files
     std::for_each(_static_routes.begin(),_static_routes.end(),[&](boost::filesystem::path p){
+
         boost::filesystem::path file(p.string()+path);
-        if(boost::filesystem::exists(file))
+        if(!boost::filesystem::is_directory(file) && boost::filesystem::exists(file))
         {
             _res.sendFile(file);
             return true;
+        } else
+        {
+            boost::filesystem::path d_file(p.string()+path+"/"+_default_file);
+            if(boost::filesystem::exists(d_file))
+            {
+                _res.sendFile(d_file);
+                return true;
+            }
         }
     });
 

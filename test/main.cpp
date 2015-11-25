@@ -31,6 +31,7 @@ int main(int argc, char ** argv)
     });
 
     app.static_("/home/linkineo/Devl/express-cpp/build");
+    app.default_("index.html");
 
     app.listen(8010);
 

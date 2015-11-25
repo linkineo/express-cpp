@@ -16,6 +16,7 @@ namespace express {
     typedef std::map<http_verb,handler> actions;
     typedef std::map<routePath,actions> dispatcherMap;
     typedef std::vector<boost::filesystem::path> static_routes;
+    typedef std::string default_file;
 
 
     class application
@@ -30,6 +31,7 @@ namespace express {
         void put(const routePath route,const routeHandler rHandler);
 
         void static_(const boost::filesystem::path);
+        void default_(const std::string);
 
         void listen(int port);
 
@@ -44,6 +46,7 @@ namespace express {
 
         dispatcherMap _routing;
         static_routes _static_routes;
+        default_file _default_file;
 
     };
 
