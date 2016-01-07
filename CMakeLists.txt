@@ -12,12 +12,12 @@ set (VERSION_STRING_INSTALL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
 
 add_definitions(--std=c++11)
 
-find_package(Boost 1.55 REQUIRED COMPONENTS system thread coroutine context filesystem regex)
+find_package(Boost 1.59 REQUIRED COMPONENTS system thread context coroutine  filesystem regex)
 find_package(Threads REQUIRED)
 
 set(EXPRESS_HDR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(SIMPLE_WEB_SERVER_HDR ${CMAKE_CURRENT_SOURCE_DIR}/Simple-Web-Server)
-include_directories(${BOOST_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${EXPRESS_HDR})
 include_directories(${SIMPLE_WEB_SERVER_HDR})
 
@@ -26,7 +26,8 @@ file(GLOB_RECURSE EXPRESS_SRC "src/*.cpp")
 add_library(express-cpp SHARED ${EXPRESS_SRC})
 set_target_properties(express-cpp PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 target_link_libraries(express-cpp ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-
+message(${Boost_LIBRARIES})
+message(${CMAKE_THREAD_LIBS_INIT})
 add_executable(express-test test/main.cpp)
 target_link_libraries(express-test express-cpp)
 
