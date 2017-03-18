@@ -1,0 +1,31 @@
+language: cpp
+
+before_script:  
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    - sudo apt-get update
+    - sudo apt-get install g++-6
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 90
+    #cmake 3.0
+    - cd $TRAVIS_BUILD_DIR
+    - wget http://www.cmake.org/files/v3.0/cmake-3.0.0.tar.gz
+    - tar xf cmake-3.0.0.tar.gz
+    - cd cmake-3.0.0
+    - ./bootstrap --prefix=~
+    - make
+    - make install
+    - export PATH="~/bin:${PATH}"
+    #boost 1.63
+    - cd $TRAVIS_BUILD_DIR
+    - wget --no-verbose --output-document=boost.tar.bz2 http://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.bz2/download 
+    - tar jfx boost.tar.bz2
+    - cd boost_1_63_0
+    - ./bootstrap.sh
+    - ./b2 stage 
+    - cd $TRAVIS_BUILD_DIR
+        
+script: 
+       - mkdir build_gcc
+       - cd build_gcc
+       - cmake .. -DBOOST_ROOT=$TRAVIS_BUILD_DIR/boost_1_63_0
+       - make 
