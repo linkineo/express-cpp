@@ -110,20 +110,19 @@ void application::connect_route(const http_verb verb, HttpServer::Response& res,
     }
 
     //matching for regular routes
-    std::for_each(_routing.begin(),_routing.end(),
-                  [&](dispatcherMap::value_type &rt){
-                      auto route = rt.first;
-                        if((_routing[route].find(verb) != _routing[route].end())
-                            && boost::regex_match(in_path,boost::regex(route)))
-                        {
-                            extract_parameters(in_path, route,_routing[route][verb].params,pMap);
-                            express::request::header_map h(req->header.begin(),req->header.end());
-                            express::request _req(req,pMap,query,h);
-                            _routing[route][verb].func(_req,_res);
-                            return;
-                        }
-    });
-
+    for(auto &rt : _routing)
+    {
+      auto route = rt.first;
+      if((_routing[route].find(verb) != _routing[route].end())
+         && boost::regex_match(in_path,boost::regex(route)))
+      {
+          extract_parameters(in_path, route,_routing[route][verb].params,pMap);
+          express::request::header_map h(req->header.begin(),req->header.end());
+          express::request _req(req,pMap,query,h);
+          _routing[route][verb].func(_req,_res);
+          return;
+      }
+    }
 
     if(!match_file(_res,req->path))
     _res.sendStatus(http_status::http_not_found);
@@ -150,25 +149,26 @@ bool application::extract_query(routePath &clientPath,queryMap &query)
 bool application::match_file(express::response &_res,std::string path)
 {
     //matching for files
-    std::for_each(_static_routes.begin(),_static_routes.end(),[&](boost::filesystem::path p){
+     bool match = false;
+     std::for_each(_static_routes.begin(),_static_routes.end(),[&](boost::filesystem::path p){
 
         boost::filesystem::path file(p.string()+path);
         if(!boost::filesystem::is_directory(file) && boost::filesystem::exists(file))
         {
             _res.sendFile(file);
-            return true;
+            match = true;
         } else
         {
             boost::filesystem::path d_file(p.string()+path+"/"+_default_file);
             if(boost::filesystem::exists(d_file))
             {
                 _res.sendFile(d_file);
-                return true;
+                match = true;
             }
         }
     });
 
-    return false;
+    return match;
 }
 
 void application::extract_parameters(const routePath clientPath,const routePath serverRegx,regx_params &regParamList,paramMap& pMap) {
