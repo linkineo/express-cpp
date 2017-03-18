@@ -60,19 +60,19 @@ void application::listen(int port) {
 
     HttpServer server(port,8);
 
-    server.default_resource["GET"]=[&](HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
+    server.default_resource["GET"]=[&](std::shared_ptr<HttpServer::Response> res, std::shared_ptr<HttpServer::Request> req) {
         connect_route(http_verb::get,res,req);
     };
 
-    server.default_resource["POST"]=[&](HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
+    server.default_resource["POST"]=[&](std::shared_ptr<HttpServer::Response> res, std::shared_ptr<HttpServer::Request> req) {
         connect_route(http_verb::post,res,req);
     };
 
-    server.default_resource["PUT"]=[&](HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
+    server.default_resource["PUT"]=[&](std::shared_ptr<HttpServer::Response> res, std::shared_ptr<HttpServer::Request> req) {
         connect_route(http_verb::put,res,req);
     };
 
-    server.default_resource["DELETE"]=[&](HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
+    server.default_resource["DELETE"]=[&](std::shared_ptr<HttpServer::Response> res, std::shared_ptr<HttpServer::Request> req) {
         connect_route(http_verb::del,res,req);
     };
 
@@ -96,7 +96,7 @@ void application::default_(const default_file def) {
         _default_file = def;
 }
 
-void application::connect_route(const http_verb verb, HttpServer::Response& res, std::shared_ptr<HttpServer::Request> req) {
+void application::connect_route(const http_verb verb, std::shared_ptr<HttpServer::Response> res, std::shared_ptr<HttpServer::Request> req) {
 
     express::response _res(res);
     paramMap pMap;
@@ -128,7 +128,7 @@ void application::connect_route(const http_verb verb, HttpServer::Response& res,
     _res.sendStatus(http_status::http_not_found);
 }
 
-bool application::extract_query(routePath &clientPath,queryMap &query)
+void application::extract_query(routePath &clientPath,queryMap &query)
 {
     //extracting route parameters
     boost::regex params_regex(regxQuery);
@@ -143,7 +143,6 @@ bool application::extract_query(routePath &clientPath,queryMap &query)
     }
 
     clientPath = boost::regex_replace(clientPath,query_remove,"");
-
 }
 
 bool application::match_file(express::response &_res,std::string path)

@@ -12,7 +12,7 @@ set (VERSION_STRING_INSTALL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}"
 
 add_definitions(--std=c++11)
 
-find_package(Boost 1.59 REQUIRED COMPONENTS system thread context coroutine  filesystem regex)
+find_package(Boost 1.59 REQUIRED COMPONENTS filesystem regex system thread filesystem date_time)
 find_package(Threads REQUIRED)
 
 set(EXPRESS_HDR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -26,8 +26,6 @@ file(GLOB_RECURSE EXPRESS_SRC "src/*.cpp")
 add_library(express-cpp SHARED ${EXPRESS_SRC})
 set_target_properties(express-cpp PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 target_link_libraries(express-cpp ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-message(${Boost_LIBRARIES})
-message(${CMAKE_THREAD_LIBS_INIT})
 add_executable(express-test test/main.cpp)
 target_link_libraries(express-test express-cpp)
 

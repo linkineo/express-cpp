@@ -26,11 +26,11 @@ int main(int argc, char ** argv)
         res.send("Hello " + req.params["id_var"] + " ! You are " + req.params["age"] + " years old !");
     });
 
-    app.post("/dali/lamp",[](express::request req, express::response res) {
+    app.post("/my/lamp",[](express::request req, express::response res) {
         res.send("GOT IT POSTED ! - GOT:" + req.body.string());
     });
 
-    app.static_("/home/linkineo/Devl/express-cpp/build");
+    app.static_("/Users/linkineo/Devl/express-cpp/build");
     app.default_("index.html");
 
     app.listen(8010);

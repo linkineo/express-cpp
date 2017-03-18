@@ -8,7 +8,7 @@ namespace express {
 	class response {
 
     public:
-		response(HttpServer::Response &res);
+		response(std::shared_ptr<HttpServer::Response> res);
 
         void append(std::string header_name, std::string header_content);
         //set content type to HTML
@@ -20,7 +20,7 @@ namespace express {
         void sendFile(const boost::filesystem::path file);
 
     private:
-        HttpServer::Response& _res;
+        std::shared_ptr<HttpServer::Response> _res;
         std::string _header_append;
 	};
 
