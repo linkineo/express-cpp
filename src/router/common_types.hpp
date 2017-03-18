@@ -38,6 +38,7 @@ namespace express {
 
     enum class http_status {
         http_ok = 200,
+        http_moved_permanently = 301,
         http_forbidden = 403,
         http_not_found = 404,
         http_internal_server_error = 500
@@ -45,6 +46,7 @@ namespace express {
 
     static std::map<http_status,std::string> http_status_text = {
             {http_status::http_ok, "OK"},
+            {http_status::http_moved_permanently, "Moved Permanently"},
             {http_status::http_forbidden, "FORBIDDEN"},
             {http_status::http_not_found, "FILE NOT FOUND"},
             {http_status::http_internal_server_error, "INTERNAL SERVER ERROR"}
