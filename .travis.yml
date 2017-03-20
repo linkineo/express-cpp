@@ -31,7 +31,7 @@ before_script:
     #boost 1.63 from cache
     - cd $HOME/cache
     - wget --no-verbose --no-clobber  http://sourceforge.net/projects/boost/files/boost/1.63.0/boost_1_63_0.tar.bz2/download 
-    - 'if [ ! -f boost-163 ]; then
+    - 'if [ ! -f boost_1_63_0/boost-163 ]; then
        tar jfx download;
        fi'
     - cd boost_1_63_0
