@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8.0)
 
 project(express-cpp)
-set(CMAKE_BUILD_TYPE Debug)
 enable_testing()
 
 set (VERSION_MAJOR 0)
@@ -10,9 +9,11 @@ set (VERSION_PATCH 0)
 
 set (VERSION_STRING_INSTALL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
-add_definitions(--std=c++11)
+if (NOT BUILD_SHARED_LIBRARIES) 
+  SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+endif() 
 
-find_package(Boost 1.59 REQUIRED COMPONENTS filesystem regex system thread filesystem date_time)
+find_package(Boost 1.59 REQUIRED COMPONENTS regex coroutine context thread filesystem system date_time)
 find_package(Threads REQUIRED)
 
 set(EXPRESS_HDR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -23,7 +24,7 @@ include_directories(${SIMPLE_WEB_SERVER_HDR})
 
 
 file(GLOB_RECURSE EXPRESS_SRC "src/*.cpp")
-add_library(express-cpp SHARED ${EXPRESS_SRC})
+add_library(express-cpp ${EXPRESS_SRC})
 set_target_properties(express-cpp PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 target_link_libraries(express-cpp ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 add_executable(express-test test/main.cpp)
