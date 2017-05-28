@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8.0)
 
 project(express-cpp)
-enable_testing()
+
+option (UNIT_TESTS "Enable Unit Tests" OFF)
 
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 1)
@@ -27,10 +28,13 @@ file(GLOB_RECURSE EXPRESS_SRC "src/*.cpp")
 add_library(express-cpp ${EXPRESS_SRC})
 set_target_properties(express-cpp PROPERTIES VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 target_link_libraries(express-cpp ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-add_executable(express-test test/main.cpp)
-target_link_libraries(express-test express-cpp)
 
-add_test(initial-test express-test)
+if (UNIT_TESTS)
+  enable_testing()
+  add_executable(express-test test/main.cpp)
+  target_link_libraries(express-test express-cpp)
+  add_test(initial-test express-test)
+endif()
 
 #installing headers, libs and binaries
 install(TARGETS express-cpp
