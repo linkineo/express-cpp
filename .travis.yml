@@ -47,5 +47,10 @@ before_script:
 script: 
        - mkdir build_gcc
        - cd build_gcc
-       - cmake .. -DBOOST_ROOT=$HOME/cache/boost_1_63_0
+       - cmake .. -DBOOST_ROOT=$HOME/cache/boost_1_63_0 -DUNIT_TESTS=ON
+       - make 
+       - cd ..
+       - mkdir build_gcc_static
+       - cd build_gcc_static
+       - cmake .. -DBOOST_ROOT=$HOME/cache/boost_1_63_0 -DBUILD_SHARED_LIBS=OFF -DUNIT_TESTS=ON
        - make 
