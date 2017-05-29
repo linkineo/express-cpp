@@ -1,20 +1,26 @@
 cmake_minimum_required(VERSION 2.8.0)
-
 project(express-cpp)
 
+set (CMAKE_CXX_STANDARD 11)
+
 option (UNIT_TESTS "Enable Unit Tests" OFF)
+option (BUILD_SHARED_LIBS "Building shared libraries" ON)
 
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 1)
 set (VERSION_PATCH 0)
 
-set (VERSION_STRING_INSTALL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
-
-if (NOT BUILD_SHARED_LIBRARIES) 
-  SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+if (NOT BUILD_SHARED_LIBS) 
+  if (UNIX OR APPLE)
+    SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+  elseif(WIN32)
+    SET(CMAKE_FIND_LIBRARY_SUFFIXES ".lib")
+  endif()
 endif() 
 
-find_package(Boost 1.59 REQUIRED COMPONENTS regex coroutine context thread filesystem system date_time)
+set (VERSION_STRING_INSTALL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+
+find_package(Boost 1.59 REQUIRED COMPONENTS regex thread filesystem system date_time)
 find_package(Threads REQUIRED)
 
 set(EXPRESS_HDR ${CMAKE_CURRENT_SOURCE_DIR}/src)
