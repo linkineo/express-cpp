@@ -39,15 +39,15 @@ void response::sendStatus(http_status status) {
 }
 
 void response::sendFile(const boost::filesystem::path file) {
-
-    std::ostringstream out;
+    
+    auto filesize = boost::filesystem::file_size(file);
     std::ifstream fileS(file.string());
-    out << fileS.rdbuf();
-    std::string str(out.str());
-    const char * raw = str.c_str();
+    std::vector<char> vec(filesize);
+    fileS.read(vec.data(),filesize);   
+    fileS.close();
 
-    *_res << "HTTP/1.1 200 OK\r\nContent-Length: " << str.length() << "\r\nContent-Type:" << content_types[file.extension().string()] << _header_append << "\r\n\r\n";
-    _res->write(raw, str.length());
+    *_res << "HTTP/1.1 200 OK\r\nContent-Length: " << filesize << "\r\nContent-Type:" << content_types[file.extension().string()] << _header_append << "\r\n\r\n";
+    _res->write(vec.data(), filesize);
     _res->flush();
 
 }
