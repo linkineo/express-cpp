@@ -33,7 +33,7 @@ namespace express {
         void static_(const boost::filesystem::path);
         void default_(const std::string);
 
-        void listen(int port);
+        void listen(int port, std::string address ="");
 
     private:
 

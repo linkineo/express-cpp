@@ -56,9 +56,10 @@ void application::register_route(const http_verb verb,const routePath route,cons
 
 }
 
-void application::listen(int port) {
+void application::listen(int port, std::string address) {
 
     HttpServer server(port,8);
+    server.config.address=address;
 
     server.default_resource["GET"]=[&](std::shared_ptr<HttpServer::Response> res, std::shared_ptr<HttpServer::Request> req) {
         connect_route(http_verb::get,res,req);
