@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
 
   app.put("/engine/status/:id", controller{});
 
-  app.put(/engine/status/:id", {
+  app.put("/engine/status/:id", {
     [](start_status s ) {
       starting-over-smi;
     },
